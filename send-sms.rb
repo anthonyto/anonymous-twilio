@@ -8,8 +8,9 @@ auth_token  = "f5ca2a5df3edfbf3c1f81014d11de97b"
 client      = Twilio::REST::Client.new account_sid, auth_token
 from        = "+17606421123" # Anthony's Twilio number
  
-friends = {
-"+18582295512" => "Anthony",
+friends = {=
+"+18582295512" => "Anthony", 
+"+17155737579" => "Alex", 
 "+17159372022" => "Nick"
 }
 
