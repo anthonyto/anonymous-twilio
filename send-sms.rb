@@ -1,15 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'twilio-ruby'
-require 'mongo'
-# require 'json/ext'
-require 'mongoid'
-
-include Mongo
-
-configure do
-  Mongoid.load!('mongoid.yml')
-end
+require 'uri'
 
 #Creat new app of type Sinatra
 class MyApp < Sinatra::Base
@@ -33,27 +25,45 @@ class MyApp < Sinatra::Base
   
   get '/' do
     # puts params
-
     fromNumber = params[:From]
     body = params[:Body]
-
-    puts "========= BEGIN - RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
-    puts fromNumber
-    puts body
-    puts "========= END  -  RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
-
-
+    oldBody = body
     toNumber = body.split(" ")[0]
     body.slice! /^\S+\s+/
-
-
     puts toNumber
     puts body
 
-    client.account.messages.create(
-        :from => from,
-        :to => toNumber,
-        :body => body
-    )
+    #Check to see if the number is a 10 digit integer
+    puts "==== DIAGNOSING ======"
+    puts "toNumber.length #{toNumber.length}"
+    puts "toNumber.to_i.to_s == toNumber #{toNumber.to_i.to_s == toNumber}"
+    puts "!body.empty? #{!body.empty?}"
+    puts "======================"
+    if(toNumber.length == 10 && toNumber.to_i.to_s == toNumber && !body.empty?)
+      #check to see if the body is just a URL, then send them the image if it is
+      if(body =~ URI::regexp)
+        #We're working with a URL, let's fetch it.
+        client.account.messages.create(
+          :from => from,
+          :to => toNumber,
+          :MediaUrl => body
+        )
+      else
+        #Great, we have a properly formed messaged. Send it
+        client.account.messages.create(
+          :from => from,
+          :to => toNumber,
+          :body => body
+        )
+      end
+    else
+      #This person doesn't know what they're doing
+      puts "========= BEGIN - RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
+      puts fromNumber
+      puts oldBody
+      puts "========= END  -  RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
+
+
+    end
   end
 end
