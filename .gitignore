@@ -234,3 +234,6 @@ build/
 *.tmproj
 *.tmproject
 tmtags
+
+### Credentials ###
+mongoid.yml
