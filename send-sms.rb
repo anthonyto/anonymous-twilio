@@ -15,14 +15,14 @@ friends = {
 }
 
 
-friends.each do |key, value|
-  client.account.messages.create(
-    :from => from,
-    :to => key,
-    :body => "Hey #{value}, Monkey party at 6PM. Bring Bananas!"
-  )
-  puts "Sent message to #{value}"
-end
+# friends.each do |key, value|
+#   client.account.messages.create(
+#     :from => from,
+#     :to => key,
+#     :body => "Hey #{value}, Monkey party at 6PM. Bring Bananas!"
+#   )
+#   puts "Sent message to #{value}"
+# end
 
 class MyApp < Sinatra::Base 
   
