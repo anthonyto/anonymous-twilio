@@ -2,14 +2,13 @@ require 'rubygems'
 require 'sinatra'
 require 'twilio-ruby'
 require 'mongo'
-require 'json/ext'
+# require 'json/ext'
+require 'mongoid'
 
 include Mongo
 
 configure do
-  conn = MongoClient.new("mongodb://anon:anonymous@linus.mongohq.com:10077/anonymous_twillio")
-  set :mongo_connection, conn
-  # set :mongo_db, conn.db('anonymous_twillio')
+  Mongoid.load!('mongoid.yml')
 end
 
 # Credentials
