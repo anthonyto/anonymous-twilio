@@ -23,3 +23,11 @@ friends.each do |key, value|
   )
   puts "Sent message to #{value}"
 end
+
+class MyApp < Sinatra::Base 
+  
+  get '/' do 
+    "Hello"
+  end
+  
+end
