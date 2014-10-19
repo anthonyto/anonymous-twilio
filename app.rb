@@ -29,9 +29,9 @@ class MyApp < Sinatra::Base
   # destination number. 
   get '/' do
 
-    fromNumber = params[:From]
+    fromNumber = params[:From][2..11]
     body       = params[:Body]
-    oldBody    = body
+    oldBody    = body.dup
     toNumber   = body.split(" ")[0]
     body.slice! /^\S+\s+/
 
@@ -47,7 +47,7 @@ class MyApp < Sinatra::Base
       if(body =~ URI::regexp)
         # We're working with a URL
         client.account.messages.create(
-          :from     => from,
+          :from     => twilioNumber,
           :to       => toNumber,
           :MediaUrl => body
 
@@ -55,32 +55,46 @@ class MyApp < Sinatra::Base
       else
         # Great, we have a properly formed messaged. Send it
         client.account.messages.create(
-          :from => from,
+          :from => twilioNumber,
           :to   => toNumber,
           :body => body
 
         )
+
       end
+      # Save message to MongoHQ
+      Message.create(
+          from: fromNumber,
+          to: toNumber,
+          body: body
+      )
     else
-      #T his person doesn't know what they're doing
-      puts "========= BEGIN - RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
-      puts fromNumber
-      puts oldBody
-      puts "========= END  -  RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
+      #Find latest message sent to you
+      sender = Message.where(to: fromNumber).asc(:time).last
+
+      puts "sender: #{sender}"
+
+      if !sender.nil?
+        #Send the message back
+        client.account.messages.create(
+            :from => twilioNumber,
+            :to   => sender[:from],
+            :body => oldBody
+        )
+
+        #Store the message transaction
+        Message.create(
+            to: sender[:from],
+            from: fromNumber,
+            body: oldBody
+        )
+      else
+        #T his person doesn't know what they're doing
+        puts "========= BEGIN - RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
+        puts fromNumber
+        puts oldBody
+        puts "========= END  -  RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
+      end
     end
- 
-    # Save message to MongoHQ
-    Message.create(
-      from: fromNumber,
-      to: toNumber,
-      body: body
-    )
-    
-    # Send message
-    client.account.messages.create(
-        :from => twilioNumber,
-        :to   => toNumber,
-        :body => body
-    )
   end
 end
