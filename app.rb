@@ -34,6 +34,7 @@ class MyApp < Sinatra::Base
   
   
   def create_contact(params)
+    # do not allow duplicates here
     Contact.create(
       sender: params[:From][2..11]
       receiver: params[:Body].split(" ")[1]
@@ -42,7 +43,12 @@ class MyApp < Sinatra::Base
   end
   
   def send_to_contact(params)
+    fromNumber = params[:From][2..11]
+    nickname   = params[:Body].split(" ")[0]
+    toNumber   = Contact.find(sender: fromNumber, nickname: nickname[1..nickname.length])[:receiver]
     
+    send(toNumber, body)
+    save_message(fromNumber, toNumber, body)
   end
   
   def send_to_number(params)
@@ -51,15 +57,7 @@ class MyApp < Sinatra::Base
     toNumber   = body.split(" ")[0]
     body.slice! /^\S+\s+/
     
-    # Check to see if the body is just a URL, then send them the image if it is
-    if(body =~ URI::regexp)
-      # We're working with a URL
-      send_mms(toNumber, body)
-    else
-      # Great, we have a properly formed messaged. Send it
-      send_sms(toNumber, body)
-    end
-    # Save message to MongoHQ
+    send(toNumber, body)
     save_message(fromNumber, toNumber, body)
   end
   
@@ -73,13 +71,7 @@ class MyApp < Sinatra::Base
     puts "sender: #{sender}"
 
     if !sender.nil?
-      if(body =~ URI::regexp)
-        # We're working with a URL
-        send_mms(toNumber, body)
-      else
-        #Send the message back
-        send_sms(sender[:from], body)
-      end      
+      send(sender[:from], body)
       save_message(sender[:from], fromNumber, body)
     else
       # This person doesn't know what they're doing
@@ -88,6 +80,17 @@ class MyApp < Sinatra::Base
       puts oldBody
       puts "========= END  -  RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
       # return error to sender
+    end
+  end
+  
+  def send(toNumber, body)
+    # Check to see if the body is just a URL, then send them the image if it is
+    if(body =~ URI::regexp)
+      # We're working with a URL
+      send_mms(toNumber, body)
+    else
+      # Great, we have a properly formed messaged. Send it
+      send_sms(toNumber, body)
     end
   end
   
@@ -127,7 +130,7 @@ class MyApp < Sinatra::Base
       create_contact(params)
       
     elsif keyword[0] == '#'
-      # send message to contact
+      send_to_contact(params)
       
     elsif (keyword.length == 10 && keyword.to_i.to_s == keyword && !params[:Body].empty?) 
       send_to_number(params)
