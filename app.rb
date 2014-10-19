@@ -7,6 +7,16 @@ require 'mongoid'
 # Create new app of type Sinatra
 class MyApp < Sinatra::Base
   
+  # CORS
+  before do
+     content_type :json    
+     headers 'Access-Control-Allow-Origin' => '*', 
+             'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST'],
+             'Access-Control-Allow-Headers' => 'Content-Type'  
+  end
+
+  set :protection, false
+  
   # Load mongoHQ credentials from the mongoid.yml file
   Mongoid.load!("mongoid.yml")
   
@@ -18,14 +28,6 @@ class MyApp < Sinatra::Base
     field :body
     field :time, type: Time, default: ->{ Time.now }
   end
-  
-  before do
-     content_type :json    
-     headers 'Access-Control-Allow-Origin' => '*', 
-              'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST']  
-  end
-
-  set :protection, false
   
   class Contact
     include Mongoid::Document
