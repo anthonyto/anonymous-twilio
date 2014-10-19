@@ -26,3 +26,7 @@ setcontact 1234447777 john
 
 <p>#john hey I met you at that party...you suck</p>
 
+## Try it:
+
+#### Send a message to 8582295512
+
