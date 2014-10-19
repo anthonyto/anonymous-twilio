@@ -56,7 +56,7 @@ class MyApp < Sinatra::Base
   
   def send_to_number(params)
     fromNumber = params[:From][2..11]
-    body       = params[:Body].dup
+    body       = params[:Body]
     toNumber   = extract_phone_number(params[:Body])
     body.slice! /^\S+\s+/
     
@@ -126,7 +126,7 @@ class MyApp < Sinatra::Base
   def extract_phone_number(input)
     firstCharIndex = input =~ /[a-zA-Z#]/
     number         = input[0..firstCharIndex-1]
-    return clean_phont_number(number)
+    return clean_phone_number(number)
   end
   
   def clean_phone_number(input)
@@ -148,7 +148,7 @@ class MyApp < Sinatra::Base
     elsif keyword[0] == '#'
       send_to_contact(params)
       
-    elsif (keyword.length == 10 && keyword.to_i.to_s == keyword && !params[:Body].empty?) 
+    elsif extract_phone_number(params[:Body]).length == 10
       send_to_number(params)
       
     else
