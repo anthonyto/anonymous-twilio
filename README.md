@@ -12,7 +12,7 @@ phonenumber message
 
 #### Example: 
 
-1234447777 hey I hate you?? 
+1234447777 hey I hate you 
 
 ## To reply to a text:
 
