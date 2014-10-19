@@ -11,7 +11,7 @@ phonenumber message
 
 #### Example: 
 
-1234447777 hey I hate you 
+2224447777 hey I hate you 
 
 ## To reply to a text:
 
@@ -19,7 +19,7 @@ Just reply, and your message will go to the last person that texted you.
 
 ## To set a contact:
 
-setcontact 1234447777 john
+setcontact 2224447777 john
 
 ## To send a message to a contact
 
