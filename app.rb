@@ -19,6 +19,14 @@ class MyApp < Sinatra::Base
     field :time, type: Time, default: ->{ Time.now }
   end
   
+  before do
+     content_type :json    
+     headers 'Access-Control-Allow-Origin' => '*', 
+              'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST']  
+  end
+
+  set :protection, false
+  
   class Contact
     include Mongoid::Document
     field :sender
