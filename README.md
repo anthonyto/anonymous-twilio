@@ -7,7 +7,6 @@ anonymous-twilio
 
 ## To send an anonymous text: 
 
-Message: 
 phonenumber message
 
 #### Example: 
