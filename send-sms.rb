@@ -62,8 +62,6 @@ class MyApp < Sinatra::Base
       puts fromNumber
       puts oldBody
       puts "========= END  -  RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
-
-
     end
   end
 end
