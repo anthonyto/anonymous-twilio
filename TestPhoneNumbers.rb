@@ -9,29 +9,32 @@ def clean_phone_number(input)
     [$1, $2, $3].join()
   end
 end
+#
+# body = "1 (858)229-5512 Something something dskfdl"
+# puts extract_phone_number(body)
+# puts body
+# puts
+# body = "18582295512 Something something dskfdl"
+# puts body
+# puts extract_phone_number(body)
+# puts
+# body = "+18582295512 Something something dskfdl"
+# puts body
+# puts extract_phone_number(body)
+# puts
+# body = "1(858)229-5512 Something something dskfdl"
+# puts body
+# puts extract_phone_number(body)
+# puts
+# body = "1(858) 229 5512 Something something dskfdl"
+# puts body
+# puts extract_phone_number(body)
+# puts
+# body = "#1(858) 229 5512 Something something dskfdl"
+# puts body
+# puts extract_phone_number(body).length
+# puts
 
-body = "1 (858)229-5512 Something something dskfdl"
-puts extract_phone_number(body)
+body = "517 573 2345 blah blahs"
+body.slice! /^\S+/
 puts body
-puts
-body = "18582295512 Something something dskfdl"
-puts body
-puts extract_phone_number(body)
-puts
-body = "+18582295512 Something something dskfdl"
-puts body
-puts extract_phone_number(body)
-puts
-body = "1(858)229-5512 Something something dskfdl"
-puts body
-puts extract_phone_number(body)
-puts
-body = "1(858) 229 5512 Something something dskfdl"
-puts body
-puts extract_phone_number(body)
-puts
-body = "#1(858) 229 5512 Something something dskfdl"
-puts body
-puts extract_phone_number(body).length
-puts
-

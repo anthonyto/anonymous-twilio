@@ -58,6 +58,8 @@ class MyApp < Sinatra::Base
     fromNumber = params[:From][2..11]
     body       = params[:Body]
     toNumber   = extract_phone_number(params[:Body])
+    ###### SEVERE ISSUE HERE ######
+    # This is only slicing up to the first space, it needs to slice up to the first 
     body.slice! /^\S+\s+/
     
     send(toNumber, body)
