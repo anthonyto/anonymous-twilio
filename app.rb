@@ -27,28 +27,31 @@ class MyApp < Sinatra::Base
   end
   
   # Twilio Ruby Gem Credentials
-  account_sid  = "AC5e0e37adaf556c3ef136e9ba71536c74"
-  auth_token   = "f5ca2a5df3edfbf3c1f81014d11de97b"
-  client       = Twilio::REST::Client.new account_sid, auth_token
-  twilioNumber = "+17606421123" # Anthony's Twilio number
-  
+  account_sid   = "AC5e0e37adaf556c3ef136e9ba71536c74"
+  auth_token    = "f5ca2a5df3edfbf3c1f81014d11de97b"
+  $client       = Twilio::REST::Client.new account_sid, auth_token
+  $twilioNumber = "+17606421123" # Anthony's Twilio number
+
   
   def create_contact(params)
     # do not allow duplicates here
-    Contact.create(
-      sender: params[:From][2..11]
-      receiver: params[:Body].split(" ")[1]
-      nickname: params[:Body].split(" ")[2]
+    contact = Contact.new(
+      sender: params[:From][2..11],
+      receiver: params[:Body].split(" ")[1],
+      nickname: params[:Body].split(" ")[2].downcase
     )
+    contact.upsert
   end
   
   def send_to_contact(params)
     fromNumber = params[:From][2..11]
-    nickname   = params[:Body].split(" ")[0]
-    toNumber   = Contact.find(sender: fromNumber, nickname: nickname[1..nickname.length])[:receiver]
+    nickname   = params[:Body].split(" ")[0].downcase
+    toNumber   = Contact.where(sender: fromNumber, nickname: nickname[1..nickname.length-1]).first[:receiver]
+    body       = params[:Body]
+    body.slice! /^\S+\s+/
     
     send(toNumber, body)
-    save_message(fromNumber, toNumber, body)
+    save_message(toNumber, fromNumber, body)
   end
   
   def send_to_number(params)
@@ -58,7 +61,7 @@ class MyApp < Sinatra::Base
     body.slice! /^\S+\s+/
     
     send(toNumber, body)
-    save_message(fromNumber, toNumber, body)
+    save_message(toNumber, fromNumber, body)
   end
   
   def respond(params)
@@ -67,7 +70,8 @@ class MyApp < Sinatra::Base
     
     #Find latest message sent to you
     sender = Message.where(to: fromNumber).asc(:time).last
-
+    
+    puts "fromNumber #{fromNumber}"
     puts "sender: #{sender}"
 
     if !sender.nil?
@@ -95,16 +99,16 @@ class MyApp < Sinatra::Base
   end
   
   def send_mms(toNumber, body)
-    client.account.messages.create(
-      :from     => twilioNumber,
+    $client.account.messages.create(
+      :from     => $twilioNumber,
       :to       => toNumber,
       :MediaUrl => body
     )
   end
   
   def send_sms(toNumber, body)
-    client.account.messages.create(
-        :from => twilioNumber,
+    $client.account.messages.create(
+        :from => $twilioNumber,
         :to   => toNumber,
         :body => body
     )
@@ -123,10 +127,10 @@ class MyApp < Sinatra::Base
   # destination number. 
   get '/' do
     
-    keyword = params[:Body](" ")[0]
+    keyword = params[:Body].split(" ")[0]
     
     # Make method calls based on the first keyword
-    if keyword == "setcontact"
+    if keyword.downcase == "setcontact"
       create_contact(params)
       
     elsif keyword[0] == '#'
@@ -135,11 +139,9 @@ class MyApp < Sinatra::Base
     elsif (keyword.length == 10 && keyword.to_i.to_s == keyword && !params[:Body].empty?) 
       send_to_number(params)
       
-    else # check fromNumber is in database
+    else
       respond(params)
     end
-
-
-    end
   end
+  
 end
