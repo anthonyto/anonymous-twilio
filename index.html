@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+    <link href="bower_components/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet"/>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="myApp.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+</head>
+<body>
+    <div class="container">
+        <input type="text" ng-model="nameText" />
+        <div class="row" ng-controller="MessagesController">
+            <div ng-repeat="cust in customers | lowercase | filter:nameText | orderBy: 'name'" class="col-md-6">
+                <p>{{ cust.name }}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
