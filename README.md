@@ -24,5 +24,5 @@ setcontact 1234447777 john
 
 ## To send a message to a contact
 
-<p>#john hey there last week was awful</p>
+<p>*john hey there last week was awful</p>
 
