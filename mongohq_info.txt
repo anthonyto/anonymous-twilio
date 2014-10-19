@@ -1,0 +1,15 @@
+[
+  {"id":"535d4c0099bbbc62499db07b",
+  "name":"alex_faber",
+  "slug":"alex-faber",
+  "invoice_information":"alex_faber\nAlex Faber\nalexfaber2011@gmail.com",
+  "invoice_cc":[],"active":false,
+  "created_at":"2014-04-27T18:27:12+00:00",
+  "owner_id":"535d4c0099bbbc62499db07c",
+  "owner":"Alex Faber","email":"alexfaber2011@gmail.com"}
+]
+
+curl -i -X GET 'https://api.compose.io/accounts/alex-faber/deployments' \
+ -H 'Content-Type: application/json' \
+ -H 'Accept-Version: 2014-06' \
+ -H 'Authorization: Bearer f79f4c5933c25724048b9b995c61c1e9dcd186938163d580c2231f4399c61d175b62afd37e6fb290717695afb16656f99bece0ebd263150bcb0fdd986c423da2'
