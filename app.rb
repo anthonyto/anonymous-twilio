@@ -81,7 +81,7 @@ class MyApp < Sinatra::Base
       # This person doesn't know what they're doing
       puts "========= BEGIN - RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
       puts fromNumber
-      puts oldBody
+      puts body
       puts "========= END  -  RESPONSE FROM SOMEONE WHO DOESN'T KNOW WHAT'S GOING ON ==========="
       # return error to sender
     end
@@ -141,6 +141,8 @@ class MyApp < Sinatra::Base
       
     else
       respond(params)
+      puts "Keywork that broke shit: #{keyword}"
+      puts "Params that broke shit: #{params}"
     end
   end
   

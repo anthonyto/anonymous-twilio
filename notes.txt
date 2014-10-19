@@ -1,7 +1,0 @@
-send_to_number
-respond
-
-setcontact 8582295512 anthony
-#nickname blah blah blah
-number
-message
