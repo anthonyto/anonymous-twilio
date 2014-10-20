@@ -21,7 +21,7 @@ Just reply, and your message will go to the last person that texted you.
 
 setcontact 2224447777 john
 
-## To send a message to a contact
+## To send a message to a contact:
 
 <p>#john hey I met you at that party...you suck</p>
 
