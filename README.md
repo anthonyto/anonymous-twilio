@@ -11,7 +11,7 @@ phonenumber message
 
 #### Example: 
 
-2224447777 hey I hate you 
+2224447777 hey there 
 
 ## To reply to a text:
 
@@ -23,5 +23,5 @@ setcontact 2224447777 john
 
 ## To send a message to a contact:
 
-<p>#john hey I met you at that party...you suck</p>
+<p>#john hey john, you working again?</p>
 
