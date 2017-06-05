@@ -1,5 +1,6 @@
 anonymous-twilio: A fully anonymous texting client
 ================
+# The DO droplet for this app has been shut down. Feel free to repurpose the source code with your own Twilio number and spin up your own app to use.
 
 # How to use this:
 
